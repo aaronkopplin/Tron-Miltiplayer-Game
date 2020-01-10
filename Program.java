@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 public class Program extends JPanel implements KeyListener {
     JFrame frame;
-    int width = 300;
-    int height = 500;
+    int width = 301;
+    int height = 501;
     Grid grid;
     long time = System.currentTimeMillis();
     ArrayList<Player> players;
@@ -15,7 +15,6 @@ public class Program extends JPanel implements KeyListener {
     Player pTwo;
     boolean gameOver = false;
     Message message;
-    int frameRate = 100;
 
     public Program(){
         frame = new JFrame("Tron");
@@ -26,7 +25,6 @@ public class Program extends JPanel implements KeyListener {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setResizable(false);
         setup();
         loop();
     }
@@ -34,7 +32,7 @@ public class Program extends JPanel implements KeyListener {
     public void loop(){
         while (true) {
             long currTime = System.currentTimeMillis();
-            if (currTime - time > frameRate){
+            if (currTime - time > 60){
                 repaint();
                 time = System.currentTimeMillis();
             }
@@ -63,7 +61,7 @@ public class Program extends JPanel implements KeyListener {
                     removePlayer(players.get(i));
                     if (players.size() == 1){
                         players.get(0).setCanMove(false);
-                        message = new Message(players.get(0).id, 3, 19);
+                        message = new Message(players.get(0).id, 0, 20);
                         gameOver = true;
                         winAnimation();
                     }
@@ -93,22 +91,18 @@ public class Program extends JPanel implements KeyListener {
     }
 
     public void drawMessage(){
-        frameRate = 500;
-        if (!message.isBlank()){
-            for (int r = 0; r < message.GAME_OVER[0].length; r++){
-                for (int c = 0; c < message.GAME_OVER.length; c++){
-                    grid.set(r + message.x, c + message.y, message.GAME_OVER[c][r]);
-                }
-            }
-        } else {
-            int id = message.getId();
-            for (int r = 0; r < message.GAME_OVER[0].length; r++){
-                for (int c = 0; c < message.GAME_OVER.length; c++){
-                    grid.set(r + message.x, c + message.y, id);
-                }
+        for (int i = 0; i < message.getHeight(); i++){
+            for (int j = 0; j < grid.width; j++){
+                if (j+message.offset < message.GAME_OVER[i].length && j+message.offset >= 0)
+                    grid.set(j + message.x, i + message.y, message.GAME_OVER[i][j+message.offset]);
+                else
+                    grid.set(j + message.x, i + message.y, players.get(0).id);
             }
         }
-        message.changeBlank();
+        if (message.offset < 50)
+            message.offset++;
+        else
+            message.offset = -40;
     }
 
     public void updateGrid(){
