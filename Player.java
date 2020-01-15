@@ -1,18 +1,29 @@
+import java.awt.*;
+import java.util.ArrayList;
+
 public class Player {
-    int id, x, y;
-    Direction dir;
-    boolean canMove = true;
-    boolean dead = false;
+    private int id, x, y;
+    private Direction dir;
+    private boolean canMove = true;
+    private boolean dead = false;
+    private ArrayList<Point> trail = new ArrayList<>();
 
     public Player(int id, int x, int y, Direction dir) {
         this.id = id;
         this.x = x;
         this.y = y;
+        trail = new ArrayList<>();
+        trail.add(new Point(this.x, this.y));
         this.dir = dir;
+    }
+
+    public ArrayList<Point> getTrail(){
+        return trail;
     }
 
     public void move() {
         if (canMove){
+            trail.add(new Point(this.x, this.y));
             switch (this.dir){
                 case NORTH:
                     y--;
@@ -30,8 +41,12 @@ public class Player {
         }
     }
 
-    public boolean isDead(){
-        return dead;
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
     }
 
     public void die(){
