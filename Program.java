@@ -10,6 +10,7 @@ public class Program extends JPanel implements KeyListener {
     int height = 500;
     static Grid grid;
     long time = System.currentTimeMillis();
+    int frameRate = 100;
 
     public Program(){
         frame = new JFrame("Tron");
@@ -29,7 +30,7 @@ public class Program extends JPanel implements KeyListener {
     public void loop(){
         while (true) {
             long currTime = System.currentTimeMillis();
-            if (currTime - time > 60){
+            if (currTime - time > frameRate){
                 grid.update();
                 repaint();
                 time = System.currentTimeMillis();

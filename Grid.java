@@ -12,7 +12,8 @@ public class Grid {
     private Player pOne;
     private Player pTwo;
     private ArrayList<Player> players;
-    GameState state = GameState.START_MENU;
+    private GameState state = GameState.START_MENU;
+    private TextManager textManager = new TextManager();
 
     public Grid(){
         grid = new int[width][height];
@@ -36,6 +37,7 @@ public class Grid {
                     currentFillVal = startMenu;
                     fill();
                 }
+                loadString(1, 20, "T R O N");
                 break;
             case IN_PROGRESS:
                 if (currentFillVal != defaultVal){
@@ -49,13 +51,32 @@ public class Grid {
                     currentFillVal = pauseMenu;
                     fill();
                 }
+                loadString(1, 16, "P A U");
+                loadString(1, 23, "S E");
                 break;
             case GAME_OVER:
                 if (currentFillVal != players.get(0).getId()){
                     currentFillVal = players.get(0).getId();
                     fill();
                 }
+                loadString(1, 16, "G A M E");
+                loadString( 1, 23, "O V E R");
                 break;
+        }
+    }
+
+    private void loadString(int x, int y, String word){
+        ArrayList<boolean[][]> tron = textManager.makeText(word);
+        for (int i = 0; i < tron.size(); i++){
+            for (int r = 0; r < tron.get(i).length; r++){
+                for (int c = 0; c < tron.get(i)[0].length; c++) {
+                    if (tron.get(i)[r][c]){
+                        grid[x + c][y + r] = defaultVal;
+                    }
+                }
+            }
+
+            x += tron.get(i)[0].length;
         }
     }
 
@@ -76,6 +97,7 @@ public class Grid {
     }
 
     private void fill(){
+        System.out.println("filling");
         for (int i = 0; i < grid.length; i++){
             for (int j = 0; j < grid[0].length; j++){
                 grid[i][j] = currentFillVal;
